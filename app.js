@@ -1,4 +1,4 @@
-// import * as Carousel from "./Carousel.js";
+import * as Carousel from "./Carousel.js";
 // import axios from "axios";
 
 // The breed selection input element.
@@ -61,7 +61,7 @@ async function initialLoad(){
             }}
     
 
-
+initialLoad()
 
 
 
@@ -86,9 +86,41 @@ breedSelect.addEventListener('change', async function () {
     const selectedBreedId = this.value;
 
       //If the user select 'See All Cats' option, the getAllCats function will be called
-      initialLoad()
+        try {
+            const resp = await fetch(`https://api.thecatapi.com/v1/images/search?breed_ids=${selectedBreedId}&limit=5`, {
+                headers: {
+                    'x-api-key': api_key
+                }
+            });
 
-    });
+              if(!resp.ok){
+                throw new Error('Error loading API') 
+              }
+
+            //Extract json object from resp and store it in the data variable
+            const data = await resp.json();
+
+            console.log(data)
+             const carrusel = document.querySelector(".carousel-inner")
+            Carousel.clear();
+
+            const breedInfo = data[0].breeds
+
+            data.forEach(element =>{
+                const imgURL = element.url;
+                const catImage = Carousel.createCarouselItem(imgURL, breedInfo, data[0].id)
+                Carousel.appendCarousel(catImage)
+         
+
+            })
+
+              //Handling error with catch
+              } catch (error) {
+                console.log(error);
+        }
+       }
+    );
+
 
 
 
