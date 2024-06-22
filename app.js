@@ -105,6 +105,7 @@ breedSelect.addEventListener('change', async function () {
             Carousel.clear();
 
             const breedInfo = data[0].breeds
+            
 
             data.forEach(element =>{
                 const imgURL = element.url;
