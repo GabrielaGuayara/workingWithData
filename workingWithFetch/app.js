@@ -1,4 +1,4 @@
-import * as Carousel from "./Carousel.js";
+import * as Carousel from './Carousel.js'
 // import axios from "axios";
 
 // The breed selection input element.
@@ -88,7 +88,7 @@ breedSelect.addEventListener('change', async function () {
       
       //If the user select 'See All Cats' option, the getAllCats function will be called
         try {
-            const resp = await fetch(`https://api.thecatapi.com/v1/images/search?breed_ids=${selectedBreedId}`, {
+            const resp = await fetch(`https://api.thecatapi.com/v1/images/search?breed_ids=${selectedBreedId}&limit=5`, {
                 headers: {
                     'x-api-key': api_key
                 }
