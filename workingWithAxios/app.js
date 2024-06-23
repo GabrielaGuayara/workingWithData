@@ -1,10 +1,11 @@
 import * as Carousel from './Carousel.js'
-// import axios from "axios";
 
 // The breed selection input element.
 const breedSelect = document.getElementById("breedSelect");
 
 const getFavouritesBtn = document.getElementById("getFavouritesBtn");
+
+const getFavourite = document.querySelector('.favourite-button')
 
 // * 4. Change all of your fetch() functions to axios!
 //  * - axios has already been imported for you within index.js.
@@ -18,14 +19,14 @@ const getFavouritesBtn = document.getElementById("getFavouritesBtn");
 //  * 
 
 
-// axios.defaults.baseURL = "https://api.thecatapi.com/v1/breeds"
+axios.defaults.baseURL = "https://api.thecatapi.com/v1/"
 
 axios.defaults.headers.common[`x-api-key`] = 'live_3ptZ6oXj6Gz7au1pT24sFNfqorps6olUzNrQnPOp9Gm1xxIEAFN8ZSdBhMph5EFc'
 
 async function initialLoad(){
 
     try{
-    const response = await axios.get("https://api.thecatapi.com/v1/breeds?limit=10")
+    const response = await axios.get("/breeds?limit=10")
        
     const data = response.data
             data.forEach(breed =>
@@ -35,13 +36,13 @@ async function initialLoad(){
                     option.innerText = breed.name;
                     breedSelect.append(option)
                 })
-
+                
 
         }catch(e){
             console.log(e.message)
 
         }}
-            // console.log(data)
+            
             //Use data from the API to create the options for the dropmenu
 
 
@@ -57,7 +58,7 @@ breedSelect.addEventListener('change', async function () {
 
     try{
     //Varible that stores the value of the current selected element
-    const response = await axios.get(`https://api.thecatapi.com/v1/images/search?breed_ids=${selectedBreedId}&limit=5`)
+    const response = await axios.get(`/images/search?breed_ids=${selectedBreedId}&limit=5`)
     const data = await response.data
         const breedInfo = data[0].breeds
        
@@ -66,9 +67,8 @@ breedSelect.addEventListener('change', async function () {
             const catImage = Carousel.createCarouselItem(imgURL, breedInfo, data[0].id)
             Carousel.appendCarousel(catImage)
 
-            console.log(element)
-
         })
+         console.log(data)
 
         Carousel.start()
 
@@ -77,7 +77,7 @@ breedSelect.addEventListener('change', async function () {
         console.log(e.message)
 
     }})
-        // console.log(data)
+      
         //Use data from the API to create the options for the dropmenu
 
 
@@ -131,7 +131,6 @@ instance.interceptors.request.use((config) => {
   })
   
 
-/
 
 
 
@@ -147,10 +146,29 @@ instance.interceptors.request.use((config) => {
  *   you delete that favourite using the API, giving this function "toggle" functionality.
  * - You can call this function by clicking on the heart at the top right of any image.
  */
-async function favourite(imgId) {
-    
-  }
+
+const favSection = document.getElementById('favoriteImages')
+
+export async function favourite (imgId) {
+    try{
+    const response = await axios.get(`/favourites?image_id=${imgId}`)
+    const data =  await response.data;
   
+    console.log(`Image ${imgId} has been favorited sucessfully`);
+    }catch(e){
+        console.log(e.message)
+    }
+  }  
+
+
+// getFavouritesBtn.addEventListener('click', async function(){
+    
+   
+
+
+  
+// })
+
   /**
    * 9. Test your favourite() function by creating a getFavourites() function.
    * - Use Axios to get all of your favourites from the cat API.
