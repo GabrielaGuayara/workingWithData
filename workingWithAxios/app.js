@@ -3,6 +3,9 @@ import * as Carousel from './Carousel.js'
 
 // The breed selection input element.
 const breedSelect = document.getElementById("breedSelect");
+
+const getFavouritesBtn = document.getElementById("getFavouritesBtn");
+
 // * 4. Change all of your fetch() functions to axios!
 //  * - axios has already been imported for you within index.js.
 //  * - If you've done everything correctly up to this point, this should be simple.
@@ -19,11 +22,12 @@ const breedSelect = document.getElementById("breedSelect");
 
 axios.defaults.headers.common[`x-api-key`] = 'live_3ptZ6oXj6Gz7au1pT24sFNfqorps6olUzNrQnPOp9Gm1xxIEAFN8ZSdBhMph5EFc'
 
-function initialLoad(){
+async function initialLoad(){
 
-    axios.get("https://api.thecatapi.com/v1/breeds?limit=10")
-        .then(response =>{
-            const data = response.data
+    try{
+    const response = await axios.get("https://api.thecatapi.com/v1/breeds?limit=10")
+       
+    const data = response.data
             data.forEach(breed =>
                 {
                     const option = document.createElement('option')
@@ -33,15 +37,14 @@ function initialLoad(){
                 })
 
 
-        }).catch(e =>{
+        }catch(e){
             console.log(e.message)
 
-        })
+        }}
             // console.log(data)
             //Use data from the API to create the options for the dropmenu
 
 
-    }
 
 initialLoad()
 
@@ -52,11 +55,10 @@ breedSelect.addEventListener('change', async function () {
 
     Carousel.clear();
 
-
+    try{
     //Varible that stores the value of the current selected element
-    axios.get(`https://api.thecatapi.com/v1/images/search?breed_ids=${selectedBreedId}&limit=5`)
-    .then(response =>{
-        const data = response.data
+    const response = await axios.get(`https://api.thecatapi.com/v1/images/search?breed_ids=${selectedBreedId}&limit=5`)
+    const data = await response.data
         const breedInfo = data[0].breeds
        
         data.forEach(element =>{
@@ -71,14 +73,12 @@ breedSelect.addEventListener('change', async function () {
         Carousel.start()
 
 
-    }).catch(e =>{
+    }catch(e) {
         console.log(e.message)
 
-    })
+    }})
         // console.log(data)
         //Use data from the API to create the options for the dropmenu
-})
-
 
 
 initialLoad()
@@ -115,13 +115,23 @@ instance.interceptors.request.use((config) => {
  *   with for future projects.
  */
 
-
-
-/*
+  /*
  * 7. As a final element of progress indication, add the following to your axios interceptors:
  * - In your request interceptor, set the body element's cursor style to "progress."
  * - In your response interceptor, remove the progress cursor style from the body element.
  */
+
+  const progressBar = document.getElementById("progressBar");
+
+  instance.interceptors.request.use((config) => {
+      
+      progressBar.style.width = '0%'
+      document.body.style.cursor = 'progress'
+      return config
+  })
+  
+
+/
 
 
 
@@ -138,7 +148,7 @@ instance.interceptors.request.use((config) => {
  * - You can call this function by clicking on the heart at the top right of any image.
  */
 async function favourite(imgId) {
-    // your code here
+    
   }
   
   /**
