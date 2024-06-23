@@ -1,3 +1,8 @@
+import * as Carousel from './Carousel.js'
+// import axios from "axios";
+
+// The breed selection input element.
+const breedSelect = document.getElementById("breedSelect");
 // * 4. Change all of your fetch() functions to axios!
 //  * - axios has already been imported for you within index.js.
 //  * - If you've done everything correctly up to this point, this should be simple.
@@ -16,7 +21,7 @@ axios.defaults.headers.common[`x-api-key`] = 'live_3ptZ6oXj6Gz7au1pT24sFNfqorps6
 
 function initialLoad(){
 
-    axios("https://api.thecatapi.com/v1/breeds?limit=10")
+    axios.get("https://api.thecatapi.com/v1/breeds?limit=10")
         .then(response =>{
             const data = response.data
             data.forEach(breed =>
@@ -55,3 +60,39 @@ initialLoad()
  * - Add a call to this function to the end of your initialLoad function above to create the initial carousel.
  */
 
+breedSelect.addEventListener('change', async function () {
+    const selectedBreedId = this.value;
+
+
+    Carousel.clear();
+
+
+    //Varible that stores the value of the current selected element
+    axios.get(`https://api.thecatapi.com/v1/images/search?breed_ids=${selectedBreedId}&limit=5`)
+    .then(response =>{
+        const data = response.data
+        const breedInfo = data[0].breeds
+       
+        data.forEach(element =>{
+            const imgURL = element.url;
+            const catImage = Carousel.createCarouselItem(imgURL, breedInfo, data[0].id)
+            Carousel.appendCarousel(catImage)
+
+            console.log(element)
+
+        })
+
+        Carousel.start()
+
+    }).catch(e =>{
+        console.log(e.message)
+
+    })
+        // console.log(data)
+        //Use data from the API to create the options for the dropmenu
+})
+
+
+
+
+    initialLoad()
